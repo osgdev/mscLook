@@ -35,7 +35,7 @@ public class Main {
 		Injector injector = Guice.createInjector(new ApplicationInjector());        
 		//Use container
 		LookupMsc lmsc = injector.getInstance(LookupMsc.class);
-		lmsc.setFile(lookup,"\\|");
+		
 		
 		try {
 			String line;

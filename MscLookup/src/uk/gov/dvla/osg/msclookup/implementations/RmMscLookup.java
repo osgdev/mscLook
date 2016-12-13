@@ -19,16 +19,16 @@ import uk.gov.osg.msclookup.Main;
 public class RmMscLookup implements LookupMsc{
 
 	private static final Logger LOGGER = LogManager.getLogger(Main.class.getName());
-	private String lookupFile;
+	private String lookupFile = "C:\\Users\\dendlel\\Desktop\\RPD\\mscLookup\\MSC_LIST.DAT";
 	private Map<String, String> mscs;
-	private String delim;
+	private String delim = "\\|";
 
 	LookupMsc lookupMsc;
 	@Inject
 	public RmMscLookup(LookupMsc lookupMsc)
 	{
 		lookupMsc = lookupMsc;
-
+		init_RmMscLookup();
 	}
 	private void init_RmMscLookup(){
 		mscs = new Hashtable<String, String>();
@@ -45,6 +45,7 @@ public class RmMscLookup implements LookupMsc{
 			LOGGER.info("Map contains {} entries",mscs.size());
 		} catch (IOException e) {
 			LOGGER.fatal(e.getMessage());
+			System.exit(1);
 		}
 	}
 	
@@ -59,10 +60,16 @@ public class RmMscLookup implements LookupMsc{
 		lookupValue = String.format("%-6.6s", lookupValue);
 		String result = mscs.get(lookupValue);
 		
-		return StringUtils.rightPad(result.substring(0,result.length() - noOfZeros), 5, "0");
+		if(result == null){
+			result = "*****";
+		}else{
+			result = StringUtils.rightPad(result.substring(0,result.length() - noOfZeros), 5, "0");
+		}
+		
+		return result;
 	}
 
-	@Override
+
 	public void setFile(String filepath, String delimitter) {
 		this.lookupFile = filepath;
 		this.delim = delimitter;
