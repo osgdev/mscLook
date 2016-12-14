@@ -13,8 +13,8 @@ import org.apache.logging.log4j.Logger;
 
 import com.google.inject.Inject;
 
+import uk.gov.dvla.osg.msclookup.Main;
 import uk.gov.dvla.osg.msclookup.interfaces.LookupMsc;
-import uk.gov.osg.msclookup.Main;
 
 public class RmMscLookup implements LookupMsc{
 

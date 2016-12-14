@@ -1,4 +1,4 @@
-package uk.gov.osg.msclookup;
+package uk.gov.dvla.osg.msclookup;
 
 import com.google.inject.AbstractModule;
 
