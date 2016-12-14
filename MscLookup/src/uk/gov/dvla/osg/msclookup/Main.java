@@ -44,7 +44,7 @@ public class Main {
 			BufferedReader br = new BufferedReader(new InputStreamReader(fis));
 			while ( (line = br.readLine()) != null ){
 				parts=line.split(",");
-				LOGGER.info("MSC = '{}'", lmsc.getMsc(parts[10], 2));
+				LOGGER.trace("MSC = '{}'", lmsc.getMsc(parts[10], 2));
 			}
 		} catch (IOException e) {
 			LOGGER.fatal(e.getMessage());
