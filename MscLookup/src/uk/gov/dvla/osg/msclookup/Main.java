@@ -19,6 +19,8 @@ public class Main {
 	private static final Logger LOGGER = LogManager.getLogger(Main.class.getName());
 
 	public static void main(String[] args) {
+
+		LOGGER.info("Starting uk.gov.dvla.osg.msclookup.Main");
 		String input = "";
 		String output = "";
 		String lookup = "C:\\Users\\dendlel\\Desktop\\RPD\\mscLookup\\MSC_LIST.DAT";
@@ -35,7 +37,6 @@ public class Main {
 		Injector injector = Guice.createInjector(new ApplicationInjector());        
 		//Use container
 		LookupMsc lmsc = injector.getInstance(LookupMsc.class);
-		
 		
 		try {
 			String line;
