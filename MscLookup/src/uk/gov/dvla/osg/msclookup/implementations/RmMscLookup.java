@@ -23,11 +23,9 @@ public class RmMscLookup implements LookupMsc{
 	private Map<String, String> mscs;
 	private String delim = "\\|";
 
-	LookupMsc lookupMsc;
 	@Inject
 	public RmMscLookup(LookupMsc lookupMsc)
 	{
-		lookupMsc = lookupMsc;
 		init_RmMscLookup();
 	}
 	private void init_RmMscLookup(){
@@ -49,9 +47,9 @@ public class RmMscLookup implements LookupMsc{
 		}
 	}
 	
-	public String getMsc(String pc, int noOfZeros){
-		if(noOfZeros > 5){
-			LOGGER.fatal("Number of zeros passed to getMsc() cannot exceed 5");
+	public String getMsc(String pc, int noOfZeros){	
+		if(noOfZeros > 4){
+			LOGGER.fatal("Number of zeros passed to getMsc() cannot exceed 4");
 			System.exit(1);
 		}
 		pc = pc.replaceAll("\\s", "");
@@ -68,12 +66,5 @@ public class RmMscLookup implements LookupMsc{
 		
 		return result;
 	}
-
-
-	public void setFile(String filepath, String delimitter) {
-		this.lookupFile = filepath;
-		this.delim = delimitter;
-		init_RmMscLookup();
-	}
-
+	
 }

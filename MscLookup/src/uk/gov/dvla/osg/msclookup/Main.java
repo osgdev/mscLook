@@ -23,7 +23,6 @@ public class Main {
 		LOGGER.info("Starting uk.gov.dvla.osg.msclookup.Main");
 		String input = "";
 		String output = "";
-		String lookup = "C:\\Users\\dendlel\\Desktop\\RPD\\mscLookup\\MSC_LIST.DAT";
 		
 		if(args.length == 0){
 			input = "C:\\Users\\dendlel\\Desktop\\DataMakerResources\\OTHER.TEST.1.DAT";
