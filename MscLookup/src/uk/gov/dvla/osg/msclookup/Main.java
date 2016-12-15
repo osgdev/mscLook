@@ -67,17 +67,20 @@ public class Main {
 			FileInputStream fis = new FileInputStream(input);
 			BufferedReader br = new BufferedReader(new InputStreamReader(fis));
 			
-			while ( (line = br.readLine()) != null ){
-				parts=line.split(delim);
-				result=lmsc.getMsc(parts[position], noOfZeros);
-				LOGGER.trace("MSC = '{}'",result);
-				try (BufferedWriter writer = Files.newBufferedWriter(Paths.get(output))) {
-		            writer.write(line + "," + result + "\n");
-		        } catch (IOException e){
-		        	LOGGER.fatal(e.getMessage());
-					System.exit(1);
-		        }
-			}
+			
+			try (BufferedWriter writer = Files.newBufferedWriter(Paths.get(output))) {
+				while ( (line = br.readLine()) != null ){
+					parts=line.split(delim);
+					result=lmsc.getMsc(parts[position], noOfZeros);
+					LOGGER.trace("MSC = '{}'",result);
+					
+			            writer.write(line + "," + result + "\n");
+			        
+				}
+			} catch (IOException e){
+	        	LOGGER.fatal(e.getMessage());
+				System.exit(1);
+	        }
 		} catch (IOException e) {
 			LOGGER.fatal(e.getMessage());
 			System.exit(1);
