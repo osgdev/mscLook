@@ -12,6 +12,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.google.inject.Inject;
+import com.google.inject.name.Named;
 
 import uk.gov.dvla.osg.msclookup.Main;
 import uk.gov.dvla.osg.msclookup.interfaces.LookupMsc;
@@ -19,13 +20,14 @@ import uk.gov.dvla.osg.msclookup.interfaces.LookupMsc;
 public class RmMscLookup implements LookupMsc{
 
 	private static final Logger LOGGER = LogManager.getLogger(Main.class.getName());
-	private String lookupFile = "C:\\Users\\dendlel\\Desktop\\RPD\\mscLookup\\MSC_LIST.DAT";
 	private Map<String, String> mscs;
+	private String lookupFile;
 	private String delim = "\\|";
 
 	@Inject
-	public RmMscLookup(LookupMsc lookupMsc)
+	public RmMscLookup(LookupMsc lookupMsc, @Named("lookupFile") String lookupFile)
 	{
+		this.lookupFile=lookupFile;
 		init_RmMscLookup();
 	}
 	private void init_RmMscLookup(){
