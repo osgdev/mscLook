@@ -1,11 +1,15 @@
 package uk.gov.dvla.osg.msclookup;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
@@ -23,33 +27,48 @@ import com.google.inject.Injector;
 public class Main {
 	//Define logger
 	private static final Logger LOGGER = LogManager.getLogger(Main.class.getName());
-
+	
 	public static void main(String[] args) {
 
 		LOGGER.info("Starting uk.gov.dvla.osg.msclookup.Main");
 		LOGGER.debug("{} args passed ",args.length);
+		
+		Properties configProps = new Properties();
+		
 		String input = "";
 		String output = "";
 		String postCodeField = "";
 		String resultField = "";
 		int noOfZeros = 0;
 		
-		if(args.length == 6){
+		if(args.length == 3){
 			try{
 				input = args[0];
 				output = args[1];
-				postCodeField = args[2];
-				resultField = args[3];
-				noOfZeros = Integer.parseInt(args[4]);
+				if(new File(args[2]).exists()){
+					configProps.load(new FileInputStream(args[2]));
+				}else{
+					LOGGER.fatal("Log file: '{}' doesn't exist",args[2]);
+					System.exit(1);
+				}
+
+				postCodeField = configProps.getProperty("postCodeFieldName");
+				resultField = configProps.getProperty("resultFieldName");
+				noOfZeros = Integer.parseInt(configProps.getProperty("noOfZerosInResult"));
+				
 			}catch (NumberFormatException e){
+				LOGGER.fatal(e.getMessage());
+				System.exit(1);
+			} catch (FileNotFoundException e) {
+				LOGGER.fatal(e.getMessage());
+				System.exit(1);
+			} catch (IOException e) {
 				LOGGER.fatal(e.getMessage());
 				System.exit(1);
 			}
 		}else{
-			LOGGER.fatal("Incorrect number of args ({}) passed to app. "
-					+ "Required args are: input file, output file, postCodeField name, "
-					+ "resultField name, number "
-					+ "of zeros in result", args.length);
+			LOGGER.fatal("Incorrect number of args ({}) passed to app. Required args are:\n"
+					+ "Input file\nOutput file\nPath to properties files", args.length);
 			System.exit(1);
 		}
 
@@ -116,7 +135,5 @@ public class Main {
 			LOGGER.fatal(e.getMessage());
 			System.exit(1);
 		}
-		
 	}
-
 }

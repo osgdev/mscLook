@@ -3,7 +3,6 @@ package uk.gov.dvla.osg.msclookup;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Properties;
@@ -28,7 +27,6 @@ public class ApplicationInjector extends AbstractModule {
 		input=str;
 	}
 	
-
 	//Define logger
 	private static final Logger LOGGER = LogManager.getLogger(Main.class.getName());
 		
