@@ -79,7 +79,7 @@ public class Main {
 		LOGGER.debug("NoOfZeros set to '{}'",noOfZeros);
 		
 		//Build container
-		Injector injector = Guice.createInjector(new ApplicationInjector(args[5]));        
+		Injector injector = Guice.createInjector(new ApplicationInjector(args[2]));        
 		//Use container
 		LookupMsc lmsc = injector.getInstance(LookupMsc.class);
 		
@@ -104,6 +104,12 @@ public class Main {
 			}
 
 			LOGGER.debug(heads);
+			if( !(heads.contains(postCodeField)) ){
+				LOGGER.fatal("'{}' is not a field in input file '{}'",postCodeField, input);
+			}
+			if( !(heads.contains(resultField)) ){
+				LOGGER.fatal("'{}' is not a field in input file '{}'",resultField, input);
+			}
 			//Write headers out
 			printer.printRecord(heads);
 			

@@ -33,7 +33,6 @@ public class ApplicationInjector extends AbstractModule {
 	@Override
 	protected void configure() {
 		configProps = new Properties();
-		//writeProperty("lookupFile","/aiw/osg/resources/MSC_LIST.DAT");
 		
 		try {
 			configProps.load(new FileInputStream(input));
@@ -45,9 +44,6 @@ public class ApplicationInjector extends AbstractModule {
 	    	LOGGER.fatal("I/O Exception during loading configuration {}",e.getMessage());
 	        
 	    }
-		
-		
-		
 		
 		bind(LookupMsc.class).to(RmMscLookup.class);
 		
