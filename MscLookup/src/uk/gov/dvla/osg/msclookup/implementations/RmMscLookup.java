@@ -43,6 +43,7 @@ public class RmMscLookup implements LookupMsc{
 				mscs.put(parts[0], parts[1]);
 			}
 			LOGGER.info("Map contains {} entries",mscs.size());
+			br.close();
 		} catch (IOException e) {
 			LOGGER.fatal(e.getMessage());
 			System.exit(1);

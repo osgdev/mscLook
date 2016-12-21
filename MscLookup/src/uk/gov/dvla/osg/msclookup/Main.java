@@ -34,7 +34,7 @@ public class Main {
 		String resultField = "";
 		int noOfZeros = 0;
 		
-		if(args.length == 5){
+		if(args.length == 6){
 			try{
 				input = args[0];
 				output = args[1];
@@ -60,7 +60,7 @@ public class Main {
 		LOGGER.debug("NoOfZeros set to '{}'",noOfZeros);
 		
 		//Build container
-		Injector injector = Guice.createInjector(new ApplicationInjector());        
+		Injector injector = Guice.createInjector(new ApplicationInjector(args[5]));        
 		//Use container
 		LookupMsc lmsc = injector.getInstance(LookupMsc.class);
 		
@@ -109,6 +109,7 @@ public class Main {
 			    results.clear();
 			}
 
+			csvFileParser.close();
 			printer.close();
 
 		} catch (IOException e) {
