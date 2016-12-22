@@ -52,7 +52,7 @@ public class RmMscLookup implements LookupMsc{
 	
 	public String getMsc(String pc, int noOfZeros){	
 		if(noOfZeros > 4){
-			LOGGER.fatal("Number of zeros passed to getMsc() cannot exceed 4");
+			LOGGER.fatal("Number of zeros passed to {} cannot exceed 4",this.getClass().getName() +"."+ Thread.currentThread().getStackTrace()[1].getMethodName());
 			System.exit(1);
 		}
 		pc = pc.replaceAll("\\s", "");
@@ -62,7 +62,7 @@ public class RmMscLookup implements LookupMsc{
 		String result = mscs.get(lookupValue);
 		
 		if(result == null){
-			result = "*****";
+			result = "";
 		}else{
 			result = StringUtils.rightPad(result.substring(0,result.length() - noOfZeros), 5, "0");
 		}
