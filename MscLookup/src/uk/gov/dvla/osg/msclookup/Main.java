@@ -39,6 +39,7 @@ public class Main {
 		String output = "";
 		String postCodeField = "";
 		String resultField = "";
+		String docRef = "";
 		int noOfZeros = 0;
 		
 		if(args.length == 3){
@@ -55,6 +56,7 @@ public class Main {
 				postCodeField = configProps.getProperty("postCodeFieldName");
 				resultField = configProps.getProperty("resultFieldName");
 				noOfZeros = Integer.parseInt(configProps.getProperty("noOfZerosInResult"));
+				docRef = configProps.getProperty("documentReference");
 				
 			}catch (NumberFormatException e){
 				LOGGER.fatal(e.getMessage());
@@ -77,6 +79,7 @@ public class Main {
 		LOGGER.debug("postCodeField set to '{}'",postCodeField);
 		LOGGER.debug("resultField set to '{}'",resultField);
 		LOGGER.debug("NoOfZeros set to '{}'",noOfZeros);
+		LOGGER.debug("Doc Reference set to '{}'",docRef);
 		
 		//Build container
 		Injector injector = Guice.createInjector(new ApplicationInjector(args[2]));        
@@ -84,7 +87,6 @@ public class Main {
 		LookupMsc lmsc = injector.getInstance(LookupMsc.class);
 		
 		try {
-			String result;
 			//Define input csv
 			FileReader in = new FileReader(input);
 			CSVFormat inputFormat= CSVFormat.RFC4180.withFirstRecordAsHeader();
@@ -98,40 +100,30 @@ public class Main {
 			CSVParser csvFileParser = new CSVParser(in, inputFormat);
 			Map<String, Integer> headers = csvFileParser.getHeaderMap();
 			
-			List<String> heads = new ArrayList<String>();
+			List<String> inputHeaders = new ArrayList<String>();
 			for(Map.Entry<String,Integer> en : headers.entrySet()){
-				heads.add(en.getKey());
+				inputHeaders.add(en.getKey());
 			}
 
-			LOGGER.debug(heads);
-			if( !(heads.contains(postCodeField)) ){
+			//Check Headers are present
+			LOGGER.debug(inputHeaders);
+			if( !(inputHeaders.contains(docRef)) ){
+				LOGGER.fatal("'{}' is not a field in input file '{}'",docRef, input);
+			}
+			if( !(inputHeaders.contains(postCodeField)) ){
 				LOGGER.fatal("'{}' is not a field in input file '{}'",postCodeField, input);
 			}
-			if( !(heads.contains(resultField)) ){
-				LOGGER.fatal("'{}' is not a field in input file '{}'",resultField, input);
-			}
+
 			//Write headers out
-			printer.printRecord(heads);
+			printer.printRecord(docRef,resultField);
 			
 			//Write records out
 			Iterable<CSVRecord> records = csvFileParser.getRecords();
-			List<String> results = new ArrayList<String>();
-			String fieldVal;
-			for (CSVRecord record : records) {
-				for(String field : heads){
-					if(field.equalsIgnoreCase(resultField)){
-						String pc = record.get(postCodeField);
-					    result=lmsc.getMsc(pc, noOfZeros);
-					    LOGGER.debug("input postcode = '{}' result = '{}'",pc ,result);
-					    fieldVal=result;
-					}else{
-						fieldVal = record.get(field);
-					}
-					results.add(fieldVal);
-				}
 
-			    printer.printRecord(results);
-			    results.clear();
+			for (CSVRecord record : records) {
+				printer.printRecord(record.get(docRef),lmsc.getMsc(record.get(postCodeField), noOfZeros));
+				
+
 			}
 
 			csvFileParser.close();
