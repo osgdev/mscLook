@@ -51,15 +51,25 @@ public class RmMscLookup implements LookupMsc{
 	}
 	
 	public String getMsc(String pc, int noOfZeros){	
+		String result="";
 		if(noOfZeros > 4){
 			LOGGER.fatal("Number of zeros passed to {} cannot exceed 4",this.getClass().getName() +"."+ Thread.currentThread().getStackTrace()[1].getMethodName());
 			System.exit(1);
 		}
-		pc = pc.replaceAll("\\s", "");
-		String lookupValue = pc.substring(0, pc.trim().length()-3) + " " + 
-				pc.substring(pc.trim().length()-3,pc.trim().length()-2);
-		lookupValue = String.format("%-6.6s", lookupValue);
-		String result = mscs.get(lookupValue);
+		try{
+			pc = pc.replaceAll("\\s", "");
+			if(pc.length() < 5){
+				result = null;
+			}else{
+				String lookupValue = pc.substring(0, pc.trim().length()-3) + " " + 
+					pc.substring(pc.trim().length()-3,pc.trim().length()-2);
+				lookupValue = String.format("%-6.6s", lookupValue);
+				result = mscs.get(lookupValue);
+			}
+		}catch (Exception e){
+			LOGGER.fatal("Format of postcode '{}' failed with error '{}'", pc, e.getMessage());
+			System.exit(0);
+		}
 		
 		if(result == null){
 			result = "";
