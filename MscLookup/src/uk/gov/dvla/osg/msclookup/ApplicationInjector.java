@@ -10,7 +10,9 @@ import java.util.Properties;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import uk.gov.dvla.osg.msclookup.implementations.DpsFromQAS;
 import uk.gov.dvla.osg.msclookup.implementations.RmMscLookup;
+import uk.gov.dvla.osg.msclookup.interfaces.LookupDps;
 import uk.gov.dvla.osg.msclookup.interfaces.LookupMsc;
 
 import com.google.inject.AbstractModule;
@@ -46,6 +48,7 @@ public class ApplicationInjector extends AbstractModule {
 	    }
 		
 		bind(LookupMsc.class).to(RmMscLookup.class);
+		bind(LookupDps.class).to(DpsFromQAS.class);
 		
 	}
 	
