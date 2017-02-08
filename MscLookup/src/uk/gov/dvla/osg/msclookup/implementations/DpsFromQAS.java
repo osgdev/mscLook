@@ -30,8 +30,8 @@ public class DpsFromQAS implements LookupDps {
 	public DpsFromQAS(LookupDps lookupDps, 
 			@Named("qasFilePath") String qasFilePath, 
 			@Named("qasFilePrefix") String qasFilePrefix,
-			@Named("ipwIpAddress") String hostname,
-			@Named("ipwUser") String username){
+			@Named("hostIpAddress") String hostname,
+			@Named("hostUser") String username){
 		this.qasFilePath=qasFilePath;
 		this.qasFilePrefix=qasFilePrefix;
 		this.hostname=hostname;
@@ -141,9 +141,14 @@ public class DpsFromQAS implements LookupDps {
             	}else{
             		qasDps = "";
             	}
-            	if( ("1".equals(qasConf)) && !(qasMsc.trim().isEmpty()) && !(adds.get(k).getPc().isEmpty()) && !(qasDps.isEmpty()) ){
-            		adds.get(k).setDps(qasDps);
-            		dpsCount ++;
+            	if( ("1".equals(qasConf)) && !(qasMsc.trim().isEmpty()) ){
+            		if( ( !(adds.get(k).getPc().isEmpty()) || !(adds.get(k).getPc()==null) ) ){
+            			adds.get(k).setDps(qasDps);
+                		adds.get(k).setMsc(qasMsc);
+                		dpsCount ++;
+            		}else{
+            			adds.get(k).setMsc("");
+            		}
             	}
             	k ++;
             }

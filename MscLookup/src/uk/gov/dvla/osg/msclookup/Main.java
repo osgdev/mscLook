@@ -170,8 +170,12 @@ public class Main {
 				adds.add(add);
 				i ++;
 			}
-
+/*
 			for(Addresses add : ldps.getDps(adds)){
+				printer.printRecord((Object[])add.print());
+			}*/
+			
+			for(Addresses add : adds){
 				printer.printRecord((Object[])add.print());
 			}
 			

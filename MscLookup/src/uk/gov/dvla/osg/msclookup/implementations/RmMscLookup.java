@@ -52,18 +52,27 @@ public class RmMscLookup implements LookupMsc{
 	
 	public String getMsc(String pc, int noOfZeros){	
 		String result="";
+		String[] split;
 		if(noOfZeros > 4){
 			LOGGER.fatal("Number of zeros passed to {} cannot exceed 4",this.getClass().getName() +"."+ Thread.currentThread().getStackTrace()[1].getMethodName());
 			System.exit(1);
 		}
 		try{
+			LOGGER.debug("pc='{}'",pc);
+			
+			split = pc.split(" ");
 			pc = pc.replaceAll("\\s", "");
-			if(pc.length() < 5){
+			if((pc.length() < 4) || (split.length != 2)){
 				result = null;
+				LOGGER.debug("LOOKVAL=NULL");
 			}else{
-				String lookupValue = pc.substring(0, pc.trim().length()-3) + " " + 
-					pc.substring(pc.trim().length()-3,pc.trim().length()-2);
+				//String lookupValue = pc.substring(0, pc.trim().length()-3) + " " + 
+				//	pc.substring(pc.trim().length()-3,pc.trim().length()-2);
+				String lookupValue = split[0] + " " + split[1].substring(0, 1);
+				
+				
 				lookupValue = String.format("%-6.6s", lookupValue);
+				LOGGER.debug("LOOKVAL='{}'",lookupValue);
 				result = mscs.get(lookupValue);
 			}
 		}catch (Exception e){
