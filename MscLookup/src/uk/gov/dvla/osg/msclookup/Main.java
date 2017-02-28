@@ -1,5 +1,6 @@
 package uk.gov.dvla.osg.msclookup;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -7,6 +8,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -19,6 +21,7 @@ import org.apache.commons.csv.QuoteMode;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import uk.gov.dvla.osg.common.classes.RpdFileHandler;
 import uk.gov.dvla.osg.msclookup.interfaces.LookupDps;
 import uk.gov.dvla.osg.msclookup.interfaces.LookupMsc;
 
@@ -116,9 +119,10 @@ public class Main {
 		LookupMsc lmsc = injector.getInstance(LookupMsc.class);
 		LookupDps ldps = injector.getInstance(LookupDps.class);
 		
+		RpdFileHandler fh = new RpdFileHandler(input, output);
 		
 		try {
-			//Define input csv
+			/*//Define input csv
 			FileReader in = new FileReader(input);
 			CSVFormat inputFormat= CSVFormat.RFC4180.withFirstRecordAsHeader();
 			
@@ -129,12 +133,9 @@ public class Main {
 		
 			//Get Headers from csv
 			CSVParser csvFileParser = new CSVParser(in, inputFormat);
-			Map<String, Integer> headers = csvFileParser.getHeaderMap();
+			Map<String, Integer> headers = csvFileParser.getHeaderMap();*/
 			
-			List<String> inputHeaders = new ArrayList<String>();
-			for(Map.Entry<String,Integer> en : headers.entrySet()){
-				inputHeaders.add(en.getKey());
-			}
+			List<String> inputHeaders = fh.getHeaders();
 
 			for(String str : reqFields){
 				String[] split = str.split(",");
@@ -150,14 +151,77 @@ public class Main {
 			}
 			
 			//Write headers out
-			printer.printRecord(docRef,mscField,dpsField);
+			fh.write(fh.getHeaders());
+			HashMap<String,Integer> fileMap = fh.getMapping();
+			//printer.printRecord(docRef,mscField,dpsField);
 			
 			//Write records out
-			Iterable<CSVRecord> records = csvFileParser.getRecords();
+			//Iterable<CSVRecord> records = csvFileParser.getRecords();
 			ArrayList<Addresses> adds = new ArrayList<Addresses>();
 			
-			int i = 1;
-			for (CSVRecord record : records) {
+			File f = new File(input);
+            BufferedReader b = new BufferedReader(new FileReader(f));
+            String readLine = b.readLine();
+            
+            LOGGER.debug("Read line as header '{}'",readLine);
+            int i = 1;
+            
+            while ((readLine = b.readLine()) != null) {
+            	String[] split = readLine.split("\\t");
+            	Addresses add = new Addresses(i,
+						split[fileMap.get(docRef)],
+						split[fileMap.get(add1Field)], 
+						split[fileMap.get(add2Field)], 
+						split[fileMap.get(add3Field)], 
+						split[fileMap.get(add4Field)], 
+						split[fileMap.get(add5Field)], 
+						split[fileMap.get(postCodeField)]);
+				add.setMsc(lmsc.getMsc(split[fileMap.get(postCodeField)], noOfZeros));
+				adds.add(add);
+				i ++;
+            }
+            
+            b.close();
+			
+            
+            int mscIdx = fileMap.get(mscField);
+            int dpsIdx = fileMap.get(dpsField);
+            
+            //Output
+            BufferedReader bu = new BufferedReader(new FileReader(f));
+            readLine = bu.readLine();
+            List<String> list = new ArrayList<String>();
+            
+            List<Addresses> results = ldps.getDps(adds);
+            
+            i = 0;
+            while ((readLine = bu.readLine()) != null) {
+            	String[] split = readLine.split("\\t");
+            	list.clear();
+            	for( int x = 0; x < split.length; x ++ ){
+					if( x == mscIdx ){
+						if( results.get(i).getMsc() != null){
+							list.add(results.get(i).getMsc());
+						}else{
+							list.add("");
+						}
+						
+					} else if( x == dpsIdx ){
+						if( results.get(i).getDps() != null){
+							list.add(results.get(i).getDps());
+						}else{
+							list.add("");
+						}
+					} else {
+						list.add(split[x]);
+					}
+				}
+				fh.write(list);
+            	i ++;
+            }
+			
+			
+		/*	for (CSVRecord record : records) {
 				Addresses add = new Addresses(i,
 						record.get(docRef),
 						record.get(add1Field), 
@@ -169,18 +233,18 @@ public class Main {
 				add.setMsc(lmsc.getMsc(record.get(postCodeField), noOfZeros));
 				adds.add(add);
 				i ++;
-			}
-/*
-			for(Addresses add : ldps.getDps(adds)){
+			}*/
+
+			/*for(Addresses add : ldps.getDps(adds)){
 				printer.printRecord((Object[])add.print());
 			}*/
 			
-			for(Addresses add : adds){
+			/*for(Addresses add : adds){
 				printer.printRecord((Object[])add.print());
-			}
-			
-			csvFileParser.close();
-			printer.close();
+			}*/
+			fh.closeFile();
+			//csvFileParser.close();
+			//printer.close();
 
 		} catch (IOException e) {
 			LOGGER.fatal(e.getMessage());
