@@ -167,7 +167,7 @@ public class Main {
             int i = 1;
             
             while ((readLine = b.readLine()) != null) {
-            	String[] split = readLine.split("\\t");
+            	String[] split = readLine.split("\\t",-1);
             	Addresses add = new Addresses(i,
 						split[fileMap.get(docRef)],
 						split[fileMap.get(add1Field)], 
@@ -196,7 +196,7 @@ public class Main {
             
             i = 0;
             while ((readLine = bu.readLine()) != null) {
-            	String[] split = readLine.split("\\t");
+            	String[] split = readLine.split("\\t",-1);
             	list.clear();
             	for( int x = 0; x < split.length; x ++ ){
 					if( x == mscIdx ){
