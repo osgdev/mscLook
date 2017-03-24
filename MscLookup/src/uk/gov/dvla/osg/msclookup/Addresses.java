@@ -3,17 +3,35 @@ package uk.gov.dvla.osg.msclookup;
 public class Addresses {
 
 	private int sequence;
-	private String docref, add1, add2, add3, add4, add5, pc, msc, dps;
+	private String docref, name1, name2, add1, add2, add3, add4, add5, pc, msc, dps;
 	
-	public Addresses(int sequence, String docref, String add1, String add2, String add3, String add4, String add5, String pc){
+	public Addresses(int sequence, String docref, String name1, String name2, String add1, String add2, String add3, String add4, String add5, String pc){
 		this.sequence=sequence;
 		this.docref=docref;
+		this.name1=name1;
+		this.name2=name2;
 		this.add1=add1;
 		this.add2=add2;
 		this.add3=add3;
 		this.add4=add4;
 		this.add5=add5;
 		this.pc=pc;
+	}
+
+	public String getName1() {
+		return name1;
+	}
+
+	public void setName1(String name1) {
+		this.name1 = name1;
+	}
+
+	public String getName2() {
+		return name2;
+	}
+
+	public void setName2(String name2) {
+		this.name2 = name2;
 	}
 
 	public int getSequence(){
@@ -90,7 +108,7 @@ public class Addresses {
 
 	@Override
 	public String toString() {
-		return sequence + "|" + add1 + "|" + add2 + "|" + add3
+		return sequence + "|" + name1 + "|" + name2 + "|"  + add1 + "|" + add2 + "|" + add3
 				+ "|" + add4 + "|" + add5 + "|" + pc;
 	}
 	

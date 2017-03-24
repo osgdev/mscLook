@@ -130,14 +130,13 @@ public class DpsFromQAS implements LookupDps {
             int k = 0;
             Integer dpsCount=0;
             Integer recordCount=0;
-            
             while ((line = br.readLine()) != null) {
             	recordCount ++;
             	String[] split = line.split("\\|");
-            	qasConf = split[13].substring(2, 3);
-            	qasMsc = split[14];
-            	if(split.length == 16){
-            		qasDps = split[15];
+            	qasConf = split[15].substring(2, 3);
+            	qasMsc = split[16];
+            	if(split.length == 18){
+            		qasDps = split[17];
             	}else{
             		qasDps = "";
             	}

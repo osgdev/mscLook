@@ -5,19 +5,12 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Properties;
 
-import org.apache.commons.csv.CSVFormat;
-import org.apache.commons.csv.CSVParser;
-import org.apache.commons.csv.CSVPrinter;
-import org.apache.commons.csv.CSVRecord;
-import org.apache.commons.csv.QuoteMode;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -48,6 +41,8 @@ public class Main {
 		int noOfZeros = 0;
 		String hostIp ="";
 		String hostUser ="";
+		String name1 ="";
+		String name2 ="";
 		String add1Field ="";
 		String add2Field ="";
 		String add3Field ="";
@@ -76,6 +71,10 @@ public class Main {
 				reqFields.add(noOfZeros + ",noOfZerosInResult,N");
 				docRef = configProps.getProperty("documentReference");
 				reqFields.add(docRef + ",documentReference,Y");
+				name1 = configProps.getProperty("name1Field");
+				reqFields.add(name1 + ",name1Field,Y");
+				name2 = configProps.getProperty("name2Field");
+				reqFields.add(name2 + ",name2Field,Y");
 				add1Field = configProps.getProperty("address1Field");
 				reqFields.add(add1Field + ",address1Field,Y");
 				add2Field = configProps.getProperty("address2Field");
@@ -122,19 +121,6 @@ public class Main {
 		RpdFileHandler fh = new RpdFileHandler(input, output);
 		
 		try {
-			/*//Define input csv
-			FileReader in = new FileReader(input);
-			CSVFormat inputFormat= CSVFormat.RFC4180.withFirstRecordAsHeader();
-			
-			//Define output csv
-			Appendable out = new FileWriter(output);
-			CSVFormat outputFormat = CSVFormat.RFC4180.withQuoteMode(QuoteMode.ALL);
-			CSVPrinter printer = new CSVPrinter(out, outputFormat);
-		
-			//Get Headers from csv
-			CSVParser csvFileParser = new CSVParser(in, inputFormat);
-			Map<String, Integer> headers = csvFileParser.getHeaderMap();*/
-			
 			List<String> inputHeaders = fh.getHeaders();
 
 			for(String str : reqFields){
@@ -153,10 +139,8 @@ public class Main {
 			//Write headers out
 			fh.write(fh.getHeaders());
 			HashMap<String,Integer> fileMap = fh.getMapping();
-			//printer.printRecord(docRef,mscField,dpsField);
 			
 			//Write records out
-			//Iterable<CSVRecord> records = csvFileParser.getRecords();
 			ArrayList<Addresses> adds = new ArrayList<Addresses>();
 			
 			File f = new File(input);
@@ -170,6 +154,8 @@ public class Main {
             	String[] split = readLine.split("\\t",-1);
             	Addresses add = new Addresses(i,
 						split[fileMap.get(docRef)],
+						split[fileMap.get(name1)],
+						split[fileMap.get(name2)],
 						split[fileMap.get(add1Field)], 
 						split[fileMap.get(add2Field)], 
 						split[fileMap.get(add3Field)], 
@@ -220,31 +206,8 @@ public class Main {
             	i ++;
             }
 			
-			
-		/*	for (CSVRecord record : records) {
-				Addresses add = new Addresses(i,
-						record.get(docRef),
-						record.get(add1Field), 
-						record.get(add2Field), 
-						record.get(add3Field), 
-						record.get(add4Field), 
-						record.get(add5Field), 
-						record.get(postCodeField));
-				add.setMsc(lmsc.getMsc(record.get(postCodeField), noOfZeros));
-				adds.add(add);
-				i ++;
-			}*/
-
-			/*for(Addresses add : ldps.getDps(adds)){
-				printer.printRecord((Object[])add.print());
-			}*/
-			
-			/*for(Addresses add : adds){
-				printer.printRecord((Object[])add.print());
-			}*/
 			fh.closeFile();
-			//csvFileParser.close();
-			//printer.close();
+			bu.close();
 
 		} catch (IOException e) {
 			LOGGER.fatal(e.getMessage());
