@@ -132,7 +132,7 @@ public class DpsFromQAS implements LookupDps {
             Integer recordCount=0;
             while ((line = br.readLine()) != null) {
             	recordCount ++;
-            	String[] split = line.split("\\|");
+            	String[] split = line.split("\\|", -1);
             	qasConf = split[15].substring(2, 3);
             	qasMsc = split[16];
             	if(split.length == 18){
