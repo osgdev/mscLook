@@ -51,8 +51,9 @@ public class Main {
 		String dpsField ="";
 		String qasPath ="";
 		String qasPrefix="";
+		String jobId = "";
 		
-		if(args.length == 3){
+		if(args.length == 4){
 			try{
 				input = args[0];
 				output = args[1];
@@ -62,6 +63,7 @@ public class Main {
 					LOGGER.fatal("Log file: '{}' doesn't exist",args[2]);
 					System.exit(1);
 				}
+				jobId = args[3];
 				
 				postCodeField = configProps.getProperty("postCodeField");
 				reqFields.add(postCodeField + ",postCodeField,Y");
@@ -108,7 +110,7 @@ public class Main {
 			}
 		}else{
 			LOGGER.fatal("Incorrect number of args ({}) passed to app. Required args are:\n"
-					+ "Input file\nOutput file\nPath to properties files", args.length);
+					+ "Input file\nOutput file\nPath to properties files\njobID", args.length);
 			System.exit(1);
 		}
 		
@@ -163,6 +165,7 @@ public class Main {
 						split[fileMap.get(add5Field)], 
 						split[fileMap.get(postCodeField)]);
 				add.setMsc(lmsc.getMsc(split[fileMap.get(postCodeField)], noOfZeros));
+				add.setJobId(jobId);
 				adds.add(add);
 				i ++;
             }

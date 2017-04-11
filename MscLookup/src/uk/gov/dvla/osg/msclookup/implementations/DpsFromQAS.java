@@ -45,14 +45,13 @@ public class DpsFromQAS implements LookupDps {
 		final SimpleDateFormat eotsdf = new SimpleDateFormat("ddMMyyyy");
 		//Generate timestamp
 		Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-		String outTimeStamp = sdf.format(timestamp);
 		String eotTimeStamp = eotsdf.format(timestamp);
 		
 		UUID uuid = java.util.UUID.randomUUID();
 		
         String dirPath = "/ipwdata/resources/applications/qas";
-        String outboundFilName = qasFilePrefix + uuid.toString()  + ".DAT";
-        String eotFileName = qasFilePrefix + uuid.toString()  + ".EOT";
+        String outboundFilName = qasFilePrefix + adds.get(0).getJobId().trim() + "." + uuid.toString()  + ".DAT";
+        String eotFileName = qasFilePrefix + adds.get(0).getJobId().trim() + "." + uuid.toString()  + ".EOT";
         String outboundFilepath = qasFilePath + outboundFilName;
         String outboundEotFilepath = qasFilePath + eotFileName;
         String filePath = dirPath + "/RETURN." + outboundFilName;

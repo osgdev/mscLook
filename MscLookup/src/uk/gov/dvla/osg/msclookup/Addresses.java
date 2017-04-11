@@ -3,7 +3,7 @@ package uk.gov.dvla.osg.msclookup;
 public class Addresses {
 
 	private int sequence;
-	private String docref, name1, name2, add1, add2, add3, add4, add5, pc, msc, dps;
+	private String jobId, docref, name1, name2, add1, add2, add3, add4, add5, pc, msc, dps;
 	
 	public Addresses(int sequence, String docref, String name1, String name2, String add1, String add2, String add3, String add4, String add5, String pc){
 		this.sequence=sequence;
@@ -16,6 +16,14 @@ public class Addresses {
 		this.add4=add4;
 		this.add5=add5;
 		this.pc=pc;
+	}
+
+	public String getJobId() {
+		return jobId;
+	}
+
+	public void setJobId(String jobId) {
+		this.jobId = jobId;
 	}
 
 	public String getName1() {
