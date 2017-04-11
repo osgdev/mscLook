@@ -10,6 +10,7 @@ import java.io.PrintWriter;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.UUID;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -47,9 +48,11 @@ public class DpsFromQAS implements LookupDps {
 		String outTimeStamp = sdf.format(timestamp);
 		String eotTimeStamp = eotsdf.format(timestamp);
 		
+		UUID uuid = java.util.UUID.randomUUID();
+		
         String dirPath = "/ipwdata/resources/applications/qas";
-        String outboundFilName = qasFilePrefix + outTimeStamp  + ".DAT";
-        String eotFileName = qasFilePrefix + outTimeStamp  + ".EOT";
+        String outboundFilName = qasFilePrefix + uuid.toString()  + ".DAT";
+        String eotFileName = qasFilePrefix + uuid.toString()  + ".EOT";
         String outboundFilepath = qasFilePath + outboundFilName;
         String outboundEotFilepath = qasFilePath + eotFileName;
         String filePath = dirPath + "/RETURN." + outboundFilName;

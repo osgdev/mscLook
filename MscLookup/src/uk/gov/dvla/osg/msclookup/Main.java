@@ -66,7 +66,7 @@ public class Main {
 				postCodeField = configProps.getProperty("postCodeField");
 				reqFields.add(postCodeField + ",postCodeField,Y");
 				mscField = configProps.getProperty("mscField");
-				reqFields.add(mscField + ",mscField,N");
+				reqFields.add(mscField + ",mscField,Y");
 				noOfZeros = Integer.parseInt(configProps.getProperty("noOfZerosInResult"));
 				reqFields.add(noOfZeros + ",noOfZerosInResult,N");
 				docRef = configProps.getProperty("documentReference");
@@ -86,7 +86,7 @@ public class Main {
 				add5Field = configProps.getProperty("address5Field");
 				reqFields.add(add5Field + ",address5Field,Y");
 				dpsField = configProps.getProperty("dpsField");
-				reqFields.add(dpsField + ",dpsField,N");
+				reqFields.add(dpsField + ",dpsField,Y");
 				qasPath = configProps.getProperty("qasFilePath");
 				reqFields.add(qasPath + ",qasFilePath,N");
 				qasPrefix = configProps.getProperty("qasFilePrefix");
