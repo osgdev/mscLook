@@ -41,6 +41,8 @@ public class Main {
 		int noOfZeros = 0;
 		String hostIp ="";
 		String hostUser ="";
+		String hostDestination = "";
+		String returnDir = "";
 		String name1 ="";
 		String name2 ="";
 		String add1Field ="";
@@ -97,7 +99,10 @@ public class Main {
 				reqFields.add(hostIp + ",hostIpAddress,N");
 				hostUser = configProps.getProperty("hostUser");
 				reqFields.add(hostUser + ",hostUser,N");
-
+				hostDestination = configProps.getProperty("hostDestination");
+				reqFields.add(hostDestination + ",hostDestination,N");
+				returnDir = configProps.getProperty("returnDir");
+				reqFields.add(returnDir + ",returnDir,N");
 			}catch (NumberFormatException e){
 				LOGGER.fatal("NumberFormatException:{}",e.getMessage());
 				System.exit(1);

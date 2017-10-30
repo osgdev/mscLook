@@ -25,51 +25,56 @@ import com.google.inject.name.Named;
 public class DpsFromQAS implements LookupDps {
 	
 	private static final Logger LOGGER = LogManager.getLogger(Main.class.getName());
-	private String qasFilePath, qasFilePrefix, hostname, username;
+	private String qasFilePath, qasFilePrefix, hostname, hostDestination, username, remoteDirPath, returnDir;
 	
 	@Inject
 	public DpsFromQAS(LookupDps lookupDps, 
 			@Named("qasFilePath") String qasFilePath, 
 			@Named("qasFilePrefix") String qasFilePrefix,
 			@Named("hostIpAddress") String hostname,
-			@Named("hostUser") String username){
+			@Named("hostDestination") String hostDestination,
+			@Named("hostUser") String username,
+			@Named("returnDir") String returnDir,
+			@Named("remoteDirPath") String remoteDirPath){
 		this.qasFilePath=qasFilePath;
 		this.qasFilePrefix=qasFilePrefix;
+		this.hostDestination=hostDestination;
 		this.hostname=hostname;
 		this.username=username;
+		this.returnDir=returnDir;
+		this.remoteDirPath=remoteDirPath;
 	}
 
 	@Override
 	public ArrayList<Addresses> getDps(ArrayList<Addresses> adds) {
 		final SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss");
-		final SimpleDateFormat eotsdf = new SimpleDateFormat("ddMMyyyy");
+		//final SimpleDateFormat eotsdf = new SimpleDateFormat("ddMMyyyy");
 		//Generate timestamp
 		Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-		String eotTimeStamp = eotsdf.format(timestamp);
+		//String eotTimeStamp = eotsdf.format(timestamp);
 		
 		UUID uuid = java.util.UUID.randomUUID();
 		
-        String dirPath = "/ipwdata/resources/applications/qas";
-        String outboundFilName = qasFilePrefix + adds.get(0).getJobId().trim() + "." + uuid.toString()  + ".DAT";
-        String eotFileName = qasFilePrefix + adds.get(0).getJobId().trim() + "." + uuid.toString()  + ".EOT";
-        String outboundFilepath = qasFilePath + outboundFilName;
-        String outboundEotFilepath = qasFilePath + eotFileName;
-        String filePath = dirPath + "/RETURN." + outboundFilName;
-        String localPath = "/aiw/osg/tmp/RETURN." + outboundFilName;
+        String outboundFileName = qasFilePrefix + adds.get(0).getJobId().trim() + "." + uuid.toString()  + ".DAT";
+        //String eotFileName = qasFilePrefix + adds.get(0).getJobId().trim() + "." + uuid.toString()  + ".EOT";
+        String outboundFilepath = qasFilePath + outboundFileName;
+        //String outboundEotFilepath = qasFilePath + eotFileName;
+        String filePath = remoteDirPath + "RETURN." + outboundFileName;
+        String localPath = returnDir + "RETURN." + outboundFileName;
 
         try {
         	LOGGER.info("Address array size={}",adds.size());
 			PrintWriter pw = new PrintWriter(new BufferedWriter(new FileWriter(outboundFilepath,false)));
-			PrintWriter pw2 = new PrintWriter(new BufferedWriter(new FileWriter(outboundEotFilepath,false)));
+			//PrintWriter pw2 = new PrintWriter(new BufferedWriter(new FileWriter(outboundEotFilepath,false)));
 			for(Addresses add : adds){
 				pw.println(add);
 			}
 			pw.close();
 			
-			pw2.println("RUNDATE=" + eotTimeStamp);
-			pw2.close();
+			//pw2.println("RUNDATE=" + eotTimeStamp);
+			//pw2.close();
 			
-			String cmd = "scp -p " + outboundFilepath + " " + username + "@" + hostname + ":/ipwdata/HotFolders/rpd/input/";
+			String cmd = "scp -p " + outboundFilepath + " " + username + "@" + hostname + ":" + hostDestination;
 			LOGGER.info("TRANSFER COMMAND='{}'",cmd);
 			
 			Process sendDat = Runtime.getRuntime().exec(cmd);
@@ -80,13 +85,13 @@ public class DpsFromQAS implements LookupDps {
 				System.exit(1);
 			}
 			
-			cmd = "scp -p " + outboundEotFilepath + " " + username + "@" + hostname + ":/ipwdata/HotFolders/rpd/input/";
-			Process sendEot = Runtime.getRuntime().exec(cmd);
-			rc = sendEot.waitFor();
-			if(rc != 0){
-				LOGGER.fatal("Transfer of file '{}' failed with code {}",outboundEotFilepath, rc);
-				System.exit(1);
-			}
+			//cmd = "scp -p " + outboundEotFilepath + " " + username + "@" + hostname + ":" + hostDestination;
+			//Process sendEot = Runtime.getRuntime().exec(cmd);
+			//rc = sendEot.waitFor();
+//			if(rc != 0){
+//				LOGGER.fatal("Transfer of file '{}' failed with code {}",outboundEotFilepath, rc);
+//				System.exit(1);
+//			}
 			
 	        try {
 	        	LOGGER.info("Attempting download of '{}' to '{}'",filePath,localPath);
